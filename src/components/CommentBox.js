@@ -13,18 +13,33 @@ class CommentBox extends Component {
         numberOfComments: 0,
     };
 
+    addComment = (nom, comment) => {
+        const newComment = {
+            id: this.state.comment.length + 1,
+            nom,
+            comment,
+        };
+        this.setState({
+            comment: this.state.comment.concat([newComment])
+        })
+    }
+    getComments = () => {
+        return (this.state.comment.map((obj) => {
+                return <Comment key={obj.id} auteur={obj.nom} contenu={obj.comment}/>
+            }
+        ))
+
+    }
+
     render(callbackfn, thisArg) {
         return (
             <React.Fragment>
                 <h1>
-                    {this.countComments()>1?'Les commentaires':'Le commentaire'}
+                    {this.countComments() > 1 ? 'Les commentaires' : 'Le commentaire'}
                 </h1>
                 <span>{this.countComments()}</span>
-                {this.state.comment.map((obj,index) => {
-                        return <Comment id={index} auteur={obj.nom} contenu={obj.comment}/>
-                    }
-                )}
-                <CommentForm/>
+                {this.getComments()}
+                <CommentForm addComment={this.addComment}/>
             </React.Fragment>
         );
     }
@@ -32,9 +47,15 @@ class CommentBox extends Component {
     countComments = () => {
         return this.state.comment.length;
     };
+
     deleteComment = () => {
         console.log('delete');
     };
+    toggleComment = () => {
+        this.setState({
+            showComments: !this.state.showComments
+        });
+    }
 }
 
 export default CommentBox;
